@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZMAX - إجابات دروس JavaScript</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2d6bc4;
+            --accent-color: #00b4d8;
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --gradient-primary: linear-gradient(135deg, #1a365d 0%, #2d6bc4 100%);
+            --gradient-accent: linear-gradient(135deg, #00b4d8 0%, #2d6bc4 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Cairo', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+            line-height: 1.7;
+            min-height: 100vh;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* الهيدر المحسن */
+        .main-header {
+            background: var(--gradient-primary);
+            padding: 25px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 4px solid var(--accent-color);
+        }
+        
+        .main-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            background: var(--gradient-accent);
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 15px rgba(0, 180, 216, 0.3);
+        }
+        
+        .logo-icon i {
+            font-size: 28px;
+            color: white;
+        }
+        
+        .logo-text {
+            color: white;
+        }
+        
+        .logo-text h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 5px;
+        }
+        
+        .logo-text .tagline {
+            font-size: 1rem;
+            color: #dbeafe;
+            font-weight: 300;
+        }
+        
+        .zmax-badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            padding: 50px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            border: 1px solid #e2e8f0;
+            height: fit-content;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .section-header {
+            background: var(--gradient-primary);
+            padding: 25px 30px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .section-header i {
+            font-size: 24px;
+            color: var(--accent-color);
+        }
+        
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .section-body {
+            padding: 30px;
+        }
+        
+        /* تصميم الدرس */
+        .lesson {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .lesson:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .lesson-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .lesson-title i {
+            color: var(--secondary-color);
+        }
+        
+        .question-container {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-right: 4px solid var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .question-container:hover {
+            background: #f1f5f9;
+            transform: translateX(-5px);
+        }
+        
+        .question-title {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .question-title i {
+            color: var(--accent-color);
+        }
+        
+        .question-text {
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .code-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .code-header {
+            background: #1e293b;
+            color: #cbd5e1;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .code-block {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            tab-size: 2;
+        }
+        
+        .copy-btn {
+            background: var(--gradient-accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(0, 180, 216, 0.3);
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 180, 216, 0.4);
+        }
+        
+        /* قسم المراجعة */
+        .review-item {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .review-item:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 25px rgba(0, 180, 216, 0.1);
+        }
+        
+        .review-question {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .review-answer {
+            font-family: 'Courier New', monospace;
+            background: #f0f9ff;
+            padding: 18px;
+            border-radius: 10px;
+            color: var(--secondary-color);
+            font-weight: 600;
+            border-right: 4px solid var(--accent-color);
+        }
+        
+        /* قسم التعليمات */
+        .instructions {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 50px 0;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border-top: 5px solid var(--accent-color);
+        }
+        
+        .instructions h3 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .instruction-card {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .instruction-card:hover {
+            background: #f0f9ff;
+            transform: translateY(-5px);
+        }
+        
+        .instruction-card i {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+        
+        .instruction-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* الفوتر */
+        .main-footer {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 50px;
+            border-top: 4px solid var(--accent-color);
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .prayer-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #dbeafe;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .copyright {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        /* رسالة النسخ */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--success-color);
+            color: white;
+            padding: 18px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            z-index: 1000;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* تحسينات للجوّال */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 25px;
+                text-align: center;
+            }
+            
+            .logo-text h1 {
+                font-size: 2rem;
+            }
+            
+            .section-body {
+                padding: 20px;
+            }
+            
+            .instructions {
+                padding: 25px;
+            }
+            
+            .instructions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الهيدر -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>ZMAX</h1>
+                        <p class="tagline">منصة التعلم التفاعلي المتقدم</p>
+                    </div>
+                </div>
+                <div class="zmax-badge">
+                    <i class="fas fa-star"></i> النسخة الاحترافية
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- المحتوى الرئيسي -->
+    <div class="container">
+        <div class="main-content">
+            <!-- قسم الدروس -->
+            <section class="section-card">
+                <div class="section-header">
+                    <i class="fas fa-book-open"></i>
+                    <h2>دروس JavaScript</h2>
+                </div>
+                <div class="section-body">
+                    <!-- الدرس الأول -->
+                    <div class="lesson">
+                        <h3 class="lesson-title"><i class="fas fa-play-circle"></i> الدرس الأول</h3>
+                        
+                        <div class="question-container">
+                            <div class="question-title">
+                                <i class="fas fa-question-circle"></i>
+                                <span>السؤال الأول</span>
+                            </div>
+                            <p class="question-text">اكتب كود JavaScript الذي يعرض "Reward: steak" إذا كانت قيمة المتغير science تساوي 100.</p>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <span>solution-1.js</span>
+                                    <button class="copy-btn" data-code="lesson1-q1">
+                                        <i class="far fa-copy"></i> نسخ الكود
+                                    </button>
+                                </div>
+                                <pre class="code-block" id="lesson1-q1">let science = 100;
+if (science == 100) {
+  console.log("Reward: steak");
+}</pre>
+                            </div>
+                        </div>
+                        
+                        <div class="question-container">
+                            <div class="question-title">
+                                <i class="fas fa-question-circle"></i>
+                                <span>السؤال الثاني</span>
+                            </div>
+                            <p class="question-text">اكتب كود JavaScript الذي يعرض "Reward: steak" إذا كانت science تساوي 100، أو "Reward: ice cream" إذا كانت 80 أو أكثر، أو "No games for 1 week." في الحالات الأخرى.</p>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <span>solution-2.js</span>
+                                    <button class="copy-btn" data-code="lesson1-q2">
+                                        <i class="far fa-copy"></i> نسخ الكود
+                                    </button>
+                                </div>
+                                <pre class="code-block" id="lesson1-q2">let science = 80;
+if (science == 100) {
+  console.log("Reward: steak");
+} else if ( science >= 80 ){
+  console.log("Reward: ice cream");
+} else {
+  console.log("No games for 1 week.");
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- الدرس الثاني -->
+                    <div class="lesson">
+                        <h3 class="lesson-title"><i class="fas fa-play-circle"></i> الدرس الثاني</h3>
+                        
+                        <div class="question-container">
+                            <div class="question-title">
+                                <i class="fas fa-question-circle"></i>
+                                <span>السؤال الأول</span>
+                            </div>
+                            <p class="question-text">اكتب الشرط الذي يتحقق مما إذا كانت النتيجة (score) أكبر من أو تساوي 80.</p>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <span>condition-1.js</span>
+                                    <button class="copy-btn" data-code="lesson2-q1">
+                                        <i class="far fa-copy"></i> نسخ الكود
+                                    </button>
+                                </div>
+                                <pre class="code-block" id="lesson2-q1">score >= 80</pre>
+                            </div>
+                        </div>
+                        
+                        <div class="question-container">
+                            <div class="question-title">
+                                <i class="fas fa-question-circle"></i>
+                                <span>السؤال الثاني</span>
+                            </div>
+                            <p class="question-text">اكتب الشرط الذي يتحقق مما إذا كانت النتيجة (score) أقل من أو تساوي 40.</p>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <span>condition-2.js</span>
+                                    <button class="copy-btn" data-code="lesson2-q2">
+                                        <i class="far fa-copy"></i> نسخ الكود
+                                    </button>
+                                </div>
+                                <pre class="code-block" id="lesson2-q2">score <= 40</pre>
+                            </div>
+                        </div>
+                        
+                        <div class="question-container">
+                            <div class="question-title">
+                                <i class="fas fa-question-circle"></i>
+                                <span>السؤال الثالث</span>
+                            </div>
+                            <p class="question-text">اكتب الشرط الذي يتحقق مما إذا كان numberOfPeople أكبر من أو يساوي 3 AND total يساوي 3333.</p>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <span>condition-3.js</span>
+                                    <button class="copy-btn" data-code="lesson2-q3">
+                                        <i class="far fa-copy"></i> نسخ الكود
+                                    </button>
+                                </div>
+                                <pre class="code-block" id="lesson2-q3">numberOfPeople >= 3 && total == 3333</pre>
+                            </div>
+                        </div>
+                        
+                        <div class="question-container">
+                            <div class="question-title">
+                                <i class="fas fa-question-circle"></i>
+                                <span>السؤال الرابع</span>
+                            </div>
+                            <p class="question-text">اكتب الشرط الذي يتحقق مما إذا كان numberOfPeople أكبر من أو يساوي 10 OR total أكبر من أو يساوي 12000.</p>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <span>condition-4.js</span>
+                                    <button class="copy-btn" data-code="lesson2-q4">
+                                        <i class="far fa-copy"></i> نسخ الكود
+                                    </button>
+                                </div>
+                                <pre class="code-block" id="lesson2-q4">numberOfPeople >= 10 || total >= 12000</pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- بقية الدروس -->
+                    <div class="lesson">
+                        <h3 class="lesson-title"><i class="fas fa-play-circle"></i> الدرس الرابع</h3>
+                        
+                        <div class="question-container">
+                            <div class="question-title">
+                                <i class="fas fa-question-circle"></i>
+                                <span>السؤال الأول</span>
+                            </div>
+                            <p class="question-text">اكتب كود JavaScript الذي يتحقق مما إذا كانت النتيجة (score) أكبر من أو تساوي 80 وفي هذه الحالة يعرض "Test Passed"، وإذا كانت الرتبة (rank) تساوي 1 يعرض أيضًا "Trophy Acquired".</p>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <span>solution-4-1.js</span>
+                                    <button class="copy-btn" data-code="lesson4-q1">
+                                        <i class="far fa-copy"></i> نسخ الكود
+                                    </button>
+                                </div>
+                                <pre class="code-block" id="lesson4-q1">let score = 90;
+let rank = 1;
+if (score >= 80) {
+  console.log("Test Passed");
+  if (rank == 1) {
+    console.log("Trophy Acquired");
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lesson">
+                        <h3 class="lesson-title"><i class="fas fa-play-circle"></i> الدرس الخامس</h3>
+                        
+                        <div class="question-container">
+                            <div class="question-title">
+                                <i class="fas fa-question-circle"></i>
+                                <span>السؤال الأول</span>
+                            </div>
+                            <p class="question-text">اكتب كود JavaScript الذي يتحقق مما إذا كانت النتيجة (score) أكبر من أو تساوي 80 وفي هذه الحالة يعرض "Test Passed".</p>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <span>solution-5-1.js</span>
+                                    <button class="copy-btn" data-code="lesson5-q1">
+                                        <i class="far fa-copy"></i> نسخ الكود
+                                    </button>
+                                </div>
+                                <pre class="code-block" id="lesson5-q1">let score = 90;
+if (score >= 80) {
+  console.log("Test Passed");
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- قسم المراجعة -->
+            <section class="section-card">
+                <div class="section-header">
+                    <i class="fas fa-clipboard-check"></i>
+                    <h2>إجابات المراجعة</h2>
+                </div>
+                <div class="section-body">
+                    <div class="review-item">
+                        <div class="review-question">اكتب الشرط الذي يتحقق مما إذا كانت النتيجة (score) تساوي 50:</div>
+                        <div class="review-answer">score == 50</div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-question">اكتب الجزء المكمل للكود التالي: else if (____):</div>
+                        <div class="review-answer">else if (A < B)</div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-question">اكتب الشرط الذي يتحقق مما إذا كانت A أقل من B:</div>
+                        <div class="review-answer">A < B</div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-question">اكتب الشرط الذي يتحقق مما إذا كانت النتيجة (score) أكبر من أو تساوي 50:</div>
+                        <div class="review-answer">score >= 50</div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-question">ما هو الرمز المستخدم للعامل المنطقي "و" (AND) في JavaScript؟</div>
+                        <div class="review-answer">&&</div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-question">ما هو الرمز المستخدم للعامل المنطقي "أو" (OR) في JavaScript؟</div>
+                        <div class="review-answer">||</div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-question">اكتب الشرط الذي يتحقق مما إذا كان numberOfPeople أقل من أو يساوي 10 OR weight أقل من أو يساوي 800:</div>
+                        <div class="review-answer">numberOfPeople <= 10 || weight <= 800</div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-question">ماذا يحدث إذا كتبنا if (numberOfPeople = 10)؟</div>
+                        <div class="review-answer">ينتج عنه خطأ</div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-question">اكتب كود JavaScript الذي يتحقق مما إذا كانت math تساوي 100 وفي هذه الحالة يعرض "Math is 100 points"، وإذا كانت science تساوي 100 يعرض أيضًا "Math and science are 100 points".</div>
+                        <div class="review-answer">let math = 100;
+let science = 100;
+if (math == 100) {
+  console.log("Math is 100 points");
+  if (science == 100) {
+    console.log("Math and science are 100 points");
+  }
+}</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- قسم التعليمات -->
+        <section class="instructions">
+            <h3><i class="fas fa-info-circle"></i> كيفية استخدام المنصة</h3>
+            <p>منصة ZMAX تقدم تجربة تعلم احترافية مع إمكانيات متقدمة. اتبع هذه التعليمات للاستفادة القصوى:</p>
+            
+            <div class="instructions-grid">
+                <div class="instruction-card">
+                    <i class="fas fa-copy"></i>
+                    <h4>نسخ الإجابات</h4>
+                    <p>انقر على زر "نسخ الكود" لأي سؤال لنسخ الإجابة إلى الحافظة مباشرة.</p>
+                </div>
+                
+                <div class="instruction-card">
+                    <i class="fas fa-laptop-code"></i>
+                    <h4>تطبيق عملي</h4>
+                    <p>استخدم الإجابات في مشاريعك البرمجية أو محرر JavaScript المفضل لديك.</p>
+                </div>
+                
+                <div class="instruction-card">
+                    <i class="fas fa-search"></i>
+                    <h4>تصفح سهل</h4>
+                    <p>جميع الدروس مرتبة تسلسليًا لتسهيل عملية التعلم والمراجعة.</p>
+                </div>
+                
+                <div class="instruction-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h4>تصميم متجاوب</h4>
+                    <p>المنصة تعمل بكفاءة على جميع الأجهزة من حواسيب وهواتف وأجهزة لوحية.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- الفوتر -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="prayer-text">صلِّ على سيدنا محمد</div>
+                <div class="copyright">
+                    <p>ZMAX - منصة التعلم التفاعلي المتقدم</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- رسالة النسخ -->
+    <div class="notification" id="copyNotification">
+        <i class="fas fa-check-circle"></i>
+        <span>تم نسخ الكود بنجاح!</span>
+    </div>
+
+    <script>
+        // وظيفة نسخ الكود
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const codeId = this.getAttribute('data-code');
+                const codeElement = document.getElementById(codeId);
+                const codeText = codeElement.textContent;
+                
+                // استخدام Clipboard API الحديث
+                navigator.clipboard.writeText(codeText).then(() => {
+                    showNotification();
+                }).catch(err => {
+                    // الطريقة البديلة للمتصفحات القديمة
+                    const textArea = document.createElement('textarea');
+                    textArea.value = codeText;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showNotification();
+                });
+                
+                // تأثير على الزر
+                this.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+                this.style.background = 'linear-gradient(135deg, #10b981 0%, #34d399 100%)';
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="far fa-copy"></i> نسخ الكود';
+                    this.style.background = 'linear-gradient(135deg, #00b4d8 0%, #2d6bc4 100%)';
+                }, 2000);
+            });
+        });
+        
+        // عرض إشعار النسخ
+        function showNotification() {
+            const notification = document.getElementById('copyNotification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // تأثيرات التمرير
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // مراقبة العناصر لإضافة تأثيرات الظهور
+        document.querySelectorAll('.lesson, .review-item, .instruction-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+        
+        // تهيئة بعض العناصر عند التحميل
+        window.addEventListener('DOMContentLoaded', () => {
+            // إضافة تأثيرات تدريجية للعناوين
+            const titles = document.querySelectorAll('.lesson-title, .question-title, .review-question');
+            titles.forEach((title, index) => {
+                setTimeout(() => {
+                    title.style.opacity = '1';
+                    title.style.transform = 'translateX(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
