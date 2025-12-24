@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خاتم القرآن الكريم</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri&family=Cairo:wght@400;700&display=swap');
+        
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background: linear-gradient(to bottom, #e0f7fa, #ffffff); 
+            color: #1e3a5f; 
+            margin: 0; 
+            padding: 0; 
+            text-align: center; 
+        }
+        header { 
+            background: #004d40; 
+            color: #fff; 
+            padding: 30px; 
+            font-family: 'Amiri', serif; 
+        }
+        h1 { font-size: 36px; margin: 0; }
+        h2 { color: #004d40; margin-top: 30px; }
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .progress-bar { 
+            height: 35px; 
+            background: #e0e0e0; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            margin: 30px 0; 
+            position: relative;
+        }
+        .progress-fill { 
+            height: 100%; 
+            background: linear-gradient(to right, #004d40, #00796b); 
+            width: 0%; 
+            transition: width 1.5s ease; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 18px;
+        }
+        button { 
+            padding: 14px 30px; 
+            font-size: 18px; 
+            background: #00796b; 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            margin: 15px; 
+            transition: 0.3s; 
+        }
+        button:hover { background: #004d40; transform: scale(1.05); }
+        .section { margin: 50px 0; padding: 30px; background: #f1f8e9; border-radius: 15px; }
+        .azkar-list { text-align: right; line-height: 2.5; font-size: 22px; direction: rtl; }
+        p.big { font-size: 28px; font-family: 'Amiri', serif; color: #004d40; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>خاتم القرآن الكريم 🕌</h1>
+        <p>تابع تقدمك في ختم القرآن وحافظ على تلاوتك اليومية</p>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>تقدم ختمتك الحالية</h2>
+            <p>أكملت <span id="completed">0</span> من 114 سورة</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill">0%</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>سورة اليوم</h2>
+            <p class="big" id="daily-surah">اضغط الزر لاقتراح سورة جديدة</p>
+            <button onclick="suggestDailySurah()">اقتراح سورة عشوائية</button>
+            <button onclick="markSurahComplete()">تمت قراءتها اليوم</button>
+        </div>
+
+        <div class="section">
+            <h2>آية اليوم</h2>
+            <p class="big" id="daily-ayah">اضغط لعرض آية جديدة</p>
+            <p id="ayah-tafsir" style="font-style:italic; font-size:20px; margin-top:20px;"></p>
+            <button onclick="showDailyAyah()">عرض آية عشوائية مع تفسير</button>
+        </div>
+
+        <div class="section">
+            <h2>أذكار يومية</h2>
+            <button onclick="showAzkar('morning')">أذكار الصباح</button>
+            <button onclick="showAzkar('evening')">أذكار المساء</button>
+            <button onclick="showAzkar('sleep')">أذكار النوم</button>
+            <div id="azkar-display" class="azkar-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const surahs = [
+            "الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس",
+            "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه",
+            "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم",
+            "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر",
+            "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق",
+            "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة",
+            "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج",
+            "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس",
+            "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد",
+            "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات",
+            "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر",
+            "المسد", "الإخلاص", "الفلق", "الناس"
+        ];
+
+        const ayahs = [
+            {ayah: "إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ ۚ يَا أَيُّهَا الَّذِينَ آمَنُوا صَلُّوا عَلَيْهِ وَسَلِّمُوا تَسْلِيمًا", tafsir: "سورة الأحزاب - أمر الله تعالى المؤمنين بالصلاة والسلام على النبي محمد صلى الله عليه وسلم."},
+            {ayah: "وَمَنْ يَتَّقِ اللَّهَ يَجْعَلْ لَهُ مَخْرَجًا ۝ وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ", tafsir: "سورة الطلاق - من يتق الله ييسر له الأمور ويرزقه من حيث لا يحتسب."},
+            {ayah: "فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ", tafsir: "سورة البقرة - اذكروا الله يذكركم، واشكروه على نعمه."},
+            {ayah: "لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا", tafsir: "سورة البقرة - الله لا يكلف نفسًا إلا بما تستطيع."},
+            {ayah: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", tafsir: "سورة الشرح - مع كل شدة فرج ويسر."}
+        ];
+
+        const azkar = {
+            morning: [
+                "أصبحنا وأصبح الملك لله والحمد لله، لا إله إلا الله وحده لا شريك له...",
+                "اللهم بك أصبحنا وبك أمسينا وبك نحيا وبك نموت وإليك النشور",
+                "آية الكرسي (ثلاث مرات)",
+                "سورة الإخلاص والمعوذتين (ثلاث مرات كل واحدة)",
+                "سبحان الله وبحمده عدد خلقه ورضا نفسه وزِنَة عرشه ومداد كلماته (ثلاث مرات)"
+            ],
+            evening: [
+                "أمسينا وأمسى الملك لله والحمد لله، لا إله إلا الله وحده لا شريك له...",
+                "اللهم بك أمسينا وبك أصبحنا وبك نحيا وبك نموت وإليك المصير",
+                "آية الكرسي (ثلاث مرات)",
+                "سورة الإخلاص والمعوذتين (ثلاث مرات كل واحدة)"
+            ],
+            sleep: [
+                "باسمك اللهم أموت وأحيا",
+                "آية الكرسي",
+                "سورة الإخلاص والفلق والناس (ثلاث مرات)",
+                "اللهم قني عذابك يوم تبعث عبادك (ثلاث مرات)"
+            ]
+        };
+
+        let completed = parseInt(localStorage.getItem('quranCompleted') || '0');
+
+        function updateProgress() {
+            const percent = Math.round((completed / 114) * 100);
+            document.getElementById('completed').textContent = completed;
+            document.getElementById('progress-fill').style.width = percent + '%';
+            document.getElementById('progress-fill').textContent = percent + '%';
+        }
+
+        function suggestDailySurah() {
+            const random = surahs[Math.floor(Math.random() * surahs.length)];
+            document.getElementById('daily-surah').textContent = random;
+        }
+
+        function markSurahComplete() {
+            if (completed < 114) {
+                completed++;
+                localStorage.setItem('quranCompleted', completed);
+                updateProgress();
+                alert('مبروك! سورة مكتملة بنجاح 🌟');
+                if (completed === 114) {
+                    alert('تهانينا الحارة! لقد أكملت ختم القرآن الكريم 🏆');
+                }
+            }
+        }
+
+        function showDailyAyah() {
+            const randomAyah = ayahs[Math.floor(Math.random() * ayahs.length)];
+            document.getElementById('daily-ayah').textContent = randomAyah.ayah;
+            document.getElementById('ayah-tafsir').textContent = randomAyah.tafsir;
+        }
+
+        function showAzkar(type) {
+            const title = type === 'morning' ? 'أذكار الصباح' : type === 'evening' ? 'أذكار المساء' : 'أذكار النوم';
+            const list = azkar[type].map(d => `<p>• ${d}</p>`).join('');
+            document.getElementById('azkar-display').innerHTML = `<h3>${title}</h3>` + list;
+        }
+
+        // تحميل التقدم عند فتح الصفحة
+        updateProgress();
+        suggestDailySurah();
+        showDailyAyah();
+    </script>
+</body>
+</html>
